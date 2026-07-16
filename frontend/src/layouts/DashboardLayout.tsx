@@ -1,5 +1,5 @@
 import { Box, Typography, Avatar, IconButton, InputBase, Paper } from "@mui/material";
-import { Notifications, Logout, Search } from "@mui/icons-material";
+import { Logout, Search } from "@mui/icons-material";
 import { type ReactNode } from "react";
 
 import Sidebar from "../components/layout/Sidebar";
@@ -14,7 +14,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
     <Box sx={{ bgcolor: "#f1f5f9", minHeight: "100vh", width: "100%" }}>
       <Sidebar />
 
-      {/* Main area — fills all space right of the sidebar */}
       <Box
         sx={{
           ml: `${SIDEBAR_WIDTH}px`,
@@ -23,7 +22,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           flexDirection: "column",
         }}
       >
-        {/* Top bar — full width */}
+        {/* Top bar */}
         <Box
           sx={{
             height: 64,
@@ -52,7 +51,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
           <Box sx={{ flexGrow: 1 }} />
 
-          <IconButton><Notifications sx={{ color: "#64748b" }} /></IconButton>
           <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, ml: 2 }}>
             <Avatar sx={{ bgcolor: "#6366f1", width: 38, height: 38 }}>
               {user?.name?.[0]?.toUpperCase()}
@@ -69,7 +67,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           </Box>
         </Box>
 
-        {/* Page content — fills remaining height & full width */}
+        {/* Page content */}
         <Box sx={{ flexGrow: 1, p: 4, width: "100%" }}>{children}</Box>
       </Box>
     </Box>

@@ -11,8 +11,9 @@ class AuditLog(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     company_id = Column(Integer, ForeignKey("companies.id"), nullable=True)
-    user_email = Column(String, nullable=True)
-    action = Column(String, nullable=False)          
+    user_email = Column(String, nullable=True)          
+    action = Column(String, nullable=False)             
+    target_name = Column(String, nullable=True)         
     ip_address = Column(String, nullable=True)
     browser = Column(String, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)

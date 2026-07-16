@@ -40,7 +40,8 @@ def register_company(db: Session, payload, ip="", browser=""):
     db.commit()
     db.refresh(user)
 
-    audit_service.write_log(db, company.id, user.email, "Company Registered", ip, browser)
+    audit_service.write_log(db, company.id, user.email, "Company Registered",
+                            company.name, ip, browser)
     return {"message": "Company registered successfully", "company_id": company.id}
 
 
@@ -64,7 +65,8 @@ def login(db: Session, payload, ip="", browser=""):
     user.last_login = datetime.utcnow()
     db.commit()
 
-    audit_service.write_log(db, user.company_id, user.email, "User Login", ip, browser)
+    audit_service.write_log(db, user.company_id, user.email, "User Login",
+                            user.name, ip, browser)
     return _issue_tokens(db, user)
 
 
@@ -88,7 +90,8 @@ def refresh_access(db: Session, refresh_token: str):
 def logout(db: Session, user, ip="", browser=""):
     db.query(RefreshToken).filter(RefreshToken.user_id == user.id).delete()
     db.commit()
-    audit_service.write_log(db, user.company_id, user.email, "User Logout", ip, browser)
+    audit_service.write_log(db, user.company_id, user.email, "User Logout",
+                            user.name, ip, browser)
     return {"message": "Logged out"}
 
 
@@ -103,7 +106,8 @@ def forgot_password(db: Session, payload, ip="", browser=""):
     user.password = hash_password(payload.new_password)
     db.commit()
 
-    audit_service.write_log(db, user.company_id, user.email, "Password Changed", ip, browser)
+    audit_service.write_log(db, user.company_id, user.email, "Password Changed",
+                            user.name, ip, browser)
     return {"message": "Password reset successfully"}
 
 
@@ -116,5 +120,6 @@ def change_password(db: Session, user, payload, ip="", browser=""):
     user.password = hash_password(payload.new_password)
     db.commit()
 
-    audit_service.write_log(db, user.company_id, user.email, "Password Changed", ip, browser)
+    audit_service.write_log(db, user.company_id, user.email, "Password Changed",
+                            user.name, ip, browser)
     return {"message": "Password changed successfully"}

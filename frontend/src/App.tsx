@@ -9,8 +9,12 @@ import RegisterPage from "./pages/RegisterPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import DashboardPage from "./pages/DashboardPage";
 import AuditLogsPage from "./pages/AuditLogsPage";
+import CategoriesPage from "./pages/CategoriesPage";
+import ProductsPage from "./pages/ProductsPage";
 
 const queryClient = new QueryClient();
+
+const ADMIN_ROLES = ["Super Admin", "Company Admin"];
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
@@ -35,11 +39,29 @@ function AppRoutes() {
         }
       />
 
-      {/* Audit Logs — only Super Admin & Company Admin */}
+      
+      <Route
+        path="/categories"
+        element={
+          <RoleRoute allowedRoles={ADMIN_ROLES}>
+            <CategoriesPage />
+          </RoleRoute>
+        }
+      />
+
+      <Route
+        path="/products"
+        element={
+          <RoleRoute allowedRoles={ADMIN_ROLES}>
+            <ProductsPage />
+          </RoleRoute>
+        }
+      />
+
       <Route
         path="/audit-logs"
         element={
-          <RoleRoute allowedRoles={["Super Admin", "Company Admin"]}>
+          <RoleRoute allowedRoles={ADMIN_ROLES}>
             <AuditLogsPage />
           </RoleRoute>
         }

@@ -1,11 +1,13 @@
 import {
   Box, List, ListItemButton, ListItemIcon, ListItemText, Typography, Divider,
 } from "@mui/material";
-import { Dashboard, History } from "@mui/icons-material";
+import { Dashboard, Category, Inventory2, History } from "@mui/icons-material";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const NAV = [
   { label: "Dashboard", icon: <Dashboard />, path: "/dashboard" },
+  { label: "Categories", icon: <Category />, path: "/categories" },
+  { label: "Products", icon: <Inventory2 />, path: "/products" },
   { label: "Audit Logs", icon: <History />, path: "/audit-logs" },
 ];
 
@@ -30,7 +32,6 @@ export default function Sidebar() {
         p: 2,
       }}
     >
-      {/* Logo */}
       <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, px: 1, py: 2, mb: 1 }}>
         <Box sx={{ width: 36, height: 36, borderRadius: "10px", bgcolor: "#6366f1", display: "flex", alignItems: "center", justifyContent: "center" }}>
           <Typography color="white" fontWeight="bold">R</Typography>
@@ -43,7 +44,6 @@ export default function Sidebar() {
 
       <Divider sx={{ borderColor: "#1e293b", mb: 1.5 }} />
 
-      {/* Nav */}
       <List sx={{ flexGrow: 1 }}>
         {NAV.map((item) => {
           const active = location.pathname === item.path;

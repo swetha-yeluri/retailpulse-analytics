@@ -4,10 +4,11 @@ from sqlalchemy.orm import Session
 from src.models.audit_model import AuditLog
 
 
-def write_log(db: Session, company_id, user_email, action, ip="", browser=""):
+def write_log(db: Session, company_id, user_email, action, target_name="",
+              ip="", browser=""):
     log = AuditLog(
         company_id=company_id, user_email=user_email, action=action,
-        ip_address=ip, browser=browser,
+        target_name=target_name, ip_address=ip, browser=browser,
     )
     db.add(log)
     db.commit()

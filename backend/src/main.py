@@ -4,9 +4,16 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from src.config.database import Base, engine
 
-from src.models import company_model, user_model, refresh_token_model, audit_model
+from src.models import (
+    company_model, user_model, refresh_token_model, audit_model,
+    category_model, product_model,
+)
 from src.routes import auth_routes, profile_routes
 from src.routes import auth_routes, profile_routes, audit_routes
+from src.routes import (
+    auth_routes, profile_routes, audit_routes,
+    category_routes, product_routes,
+)
 
 
 Base.metadata.create_all(bind=engine)
@@ -25,6 +32,8 @@ app.add_middleware(
 app.include_router(auth_routes.router)
 app.include_router(profile_routes.router)
 app.include_router(audit_routes.router)
+app.include_router(category_routes.router)
+app.include_router(product_routes.router)
 
 @app.get("/")
 def root():
