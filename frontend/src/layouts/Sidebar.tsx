@@ -1,13 +1,14 @@
 import {
   Box, List, ListItemButton, ListItemIcon, ListItemText, Typography, Divider,
 } from "@mui/material";
-import { Dashboard, Category, Inventory2, History } from "@mui/icons-material";
+import { Dashboard, Category, Inventory2, PointOfSale, History } from "@mui/icons-material";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const NAV = [
   { label: "Dashboard", icon: <Dashboard />, path: "/dashboard" },
   { label: "Categories", icon: <Category />, path: "/categories" },
   { label: "Products", icon: <Inventory2 />, path: "/products" },
+  { label: "Sales", icon: <PointOfSale />, path: "/sales" },
   { label: "Audit Logs", icon: <History />, path: "/audit-logs" },
 ];
 

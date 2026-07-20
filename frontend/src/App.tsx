@@ -11,6 +11,7 @@ import DashboardPage from "./pages/DashboardPage";
 import AuditLogsPage from "./pages/AuditLogsPage";
 import CategoriesPage from "./pages/CategoriesPage";
 import ProductsPage from "./pages/ProductsPage";
+import SalesPage from "./pages/SalesPage";
 
 const queryClient = new QueryClient();
 
@@ -54,6 +55,15 @@ function AppRoutes() {
         element={
           <RoleRoute allowedRoles={ADMIN_ROLES}>
             <ProductsPage />
+          </RoleRoute>
+        }
+      />
+     
+     <Route
+        path="/sales"
+        element={
+          <RoleRoute allowedRoles={["Super Admin", "Company Admin", "Analyst"]}>
+            <SalesPage />
           </RoleRoute>
         }
       />
