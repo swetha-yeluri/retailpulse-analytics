@@ -4,7 +4,7 @@ import {
 } from "@mui/material";
 import { Logout, Search, Notifications } from "@mui/icons-material";
 
-import Sidebar from "../components/layout/Sidebar";
+import Sidebar from "./Sidebar";
 import { useAuth } from "../context/AuthContext";
 import { productApi, type Product } from "../api/productApi";
 
@@ -17,15 +17,13 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     productApi.list().then((products: Product[]) => {
-      const low = products.filter(
-        (p) => p.stock_quantity === 0 || p.stock_quantity < 10
-      );
+      const low = products.filter((p) => p.stock_quantity === 0 || p.stock_quantity < 10);
       setAlerts(low);
     }).catch(() => {});
   }, []);
 
   return (
-    <Box sx={{ bgcolor: "#f1f5f9", minHeight: "100vh", width: "100%" }}>
+    <Box sx={{ bgcolor: "#f8fafc", minHeight: "100vh", width: "100%" }}>
       <Sidebar />
 
       <Box sx={{ ml: `${SIDEBAR_WIDTH}px`, minHeight: "100vh", display: "flex", flexDirection: "column" }}>
@@ -37,10 +35,9 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             position: "sticky", top: 0, zIndex: 10, width: "100%",
           }}
         >
-          <Typography variant="h6" fontWeight="bold" color="#0f172a">Dashboard</Typography>
-
+          {/* Search on the left */}
           <Paper elevation={0}
-            sx={{ ml: 4, px: 2, py: 0.6, display: "flex", alignItems: "center", gap: 1, bgcolor: "#f1f5f9", borderRadius: 2, width: 320 }}>
+            sx={{ px: 2, py: 0.6, display: "flex", alignItems: "center", gap: 1, bgcolor: "#f1f5f9", borderRadius: 2, width: 360 }}>
             <Search sx={{ color: "#94a3b8", fontSize: 20 }} />
             <InputBase placeholder="Search anything..." sx={{ fontSize: 14, flexGrow: 1 }} />
           </Paper>

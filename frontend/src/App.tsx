@@ -12,6 +12,7 @@ import AuditLogsPage from "./pages/AuditLogsPage";
 import CategoriesPage from "./pages/CategoriesPage";
 import ProductsPage from "./pages/ProductsPage";
 import SalesPage from "./pages/SalesPage";
+import InventoryPage from "./pages/InventoryPage";
 
 const queryClient = new QueryClient();
 
@@ -64,6 +65,15 @@ function AppRoutes() {
         element={
           <RoleRoute allowedRoles={["Super Admin", "Company Admin", "Analyst"]}>
             <SalesPage />
+          </RoleRoute>
+        }
+      />
+
+      <Route
+        path="/inventory"
+        element={
+          <RoleRoute allowedRoles={["Super Admin", "Company Admin", "Analyst"]}>
+            <InventoryPage />
           </RoleRoute>
         }
       />
