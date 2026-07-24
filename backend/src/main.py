@@ -23,6 +23,11 @@ from src.routes import (
     auth_routes, profile_routes, audit_routes,
     category_routes, product_routes, sale_routes, inventory_routes,
 )
+from src.routes import (
+    auth_routes, profile_routes, audit_routes,
+    category_routes, product_routes, sale_routes,
+    inventory_routes, analytics_routes,
+)
 
 
 
@@ -46,6 +51,7 @@ app.include_router(category_routes.router)
 app.include_router(product_routes.router)
 app.include_router(sale_routes.router)
 app.include_router(inventory_routes.router)
+app.include_router(analytics_routes.router)
 
 @app.get("/")
 def root():
