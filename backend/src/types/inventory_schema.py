@@ -23,7 +23,7 @@ class InventoryOut(BaseModel):
 
 class StockAdjust(BaseModel):
     product_id: int
-    adjustment_type: str            # Stock In / Stock Out / Manual Adjustment
+    adjustment_type: str            
     quantity: int = Field(..., gt=0)
     reason: str = Field(..., min_length=1)
     remarks: Optional[str] = None

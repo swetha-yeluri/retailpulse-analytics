@@ -17,7 +17,7 @@ def get_analytics(from_date: Optional[str] = None, to_date: Optional[str] = None
                   category_id: Optional[int] = None, channel: str = "",
                   payment: str = "",
                   db: Session = Depends(get_db), user=Depends(require_active_user)):
-    # audit: dashboard viewed (with filters if applied)
+    
     if from_date or to_date or category_id or channel or payment:
         audit_service.write_log(db, user.company_id, user.email,
                                 "Analytics Filters Applied", "Dashboard")

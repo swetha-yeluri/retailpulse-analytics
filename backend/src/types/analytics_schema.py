@@ -21,8 +21,8 @@ class ChartPoint(BaseModel):
 
 class AnalyticsResponse(BaseModel):
     kpis: KPICards
-    revenue_trend: List[ChartPoint]        # by date
-    top_products: List[ChartPoint]         # top 10 by revenue
+    revenue_trend: List[ChartPoint]        
+    top_products: List[ChartPoint]       
     top_categories: List[ChartPoint]
     sales_by_payment: List[ChartPoint]
     sales_by_channel: List[ChartPoint]

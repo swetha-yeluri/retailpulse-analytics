@@ -10,12 +10,12 @@ import DashboardLayout from "../layouts/DashboardLayout";
 import { salesApi, type Sale, type SaleData } from "../api/salesApi";
 import { productApi, type Product } from "../api/productApi";
 import { categoryApi, type Category } from "../api/categoryApi";
+import { customerApi, type Customer } from "../api/customerApi";
 
 const CHANNELS = ["Retail Store", "Online Store", "Marketplace"];
 const PAYMENTS = ["Cash", "Card", "UPI", "Bank Transfer"];
-
 const EMPTY: SaleData = {
-  customer_name: "", product_id: 0, quantity: 1, unit_price: 0,
+  customer_name: "", customer_id: undefined, product_id: 0, quantity: 1, unit_price: 0,
   discount: 0, tax: 0, sales_channel: "Retail Store", payment_method: "Cash",
 };
 
@@ -23,6 +23,7 @@ export default function SalesPage() {
   const [sales, setSales] = useState<Sale[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [customers, setCustomers] = useState<Customer[]>([]);
   const [loading, setLoading] = useState(true);
 
   const [search, setSearch] = useState("");
@@ -56,6 +57,7 @@ export default function SalesPage() {
   useEffect(() => {
     productApi.list({ status: "Active" }).then(setProducts).catch(() => {});
     categoryApi.list().then(setCategories).catch(() => {});
+    customerApi.list({ status: "Active" }).then(setCustomers).catch(() => {});
     load();
   }, []);
 
@@ -64,7 +66,8 @@ export default function SalesPage() {
   const openCreate = () => { setForm(EMPTY); setEditId(null); setError(""); setOpen(true); };
   const openEdit = (s: Sale) => {
     setForm({
-      customer_name: s.customer_name, product_id: s.product_id, quantity: s.quantity,
+      customer_name: s.customer_name, customer_id: s.customer_id ?? undefined,
+      product_id: s.product_id, quantity: s.quantity,
       unit_price: s.unit_price, discount: s.discount, tax: s.tax,
       sales_channel: s.sales_channel, payment_method: s.payment_method,
     });
@@ -85,6 +88,13 @@ export default function SalesPage() {
     setForm(next);
   };
 
+  // customer select — customer_id + customer_name rendu set
+  const setCustomer = (e: any) => {
+    const id = e.target.value === "" ? undefined : Number(e.target.value);
+    const c = customers.find((x) => x.id === id);
+    setForm({ ...form, customer_id: id, customer_name: c ? c.full_name : form.customer_name });
+  };
+
   const selectedProduct = products.find((p) => p.id === form.product_id);
   const computedTotal = form.unit_price * form.quantity - form.discount + form.tax;
 
@@ -101,7 +111,6 @@ export default function SalesPage() {
     if (!editId && selectedProduct && form.quantity > selectedProduct.stock_quantity) {
       setError(`Insufficient stock. Available: ${selectedProduct.stock_quantity}`); return;
     }
-
     try {
       if (editId) {
         await salesApi.update(editId, form);
@@ -146,7 +155,6 @@ export default function SalesPage() {
 
       {/* Filters */}
       <Paper sx={{ p: 2, mb: 2, borderRadius: 3 }}>
-        {/* Row 1 — search + dropdowns */}
         <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap", mb: 2 }}>
           <TextField placeholder="Search invoice, customer..." size="small" value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -181,7 +189,6 @@ export default function SalesPage() {
           </TextField>
         </Box>
 
-        {/* Row 2 — date range */}
         <Box sx={{ display: "flex", gap: 2, alignItems: "center", flexWrap: "wrap" }}>
           <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600 }}>
             Date Range:
@@ -299,10 +306,25 @@ export default function SalesPage() {
         <DialogContent>
           {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
           <Grid container spacing={2.5} sx={{ mt: 0.5 }}>
+            {/* Customer dropdown (Task 6) */}
+            <Grid item xs={12} sm={6}>
+              <TextField label="Customer" select fullWidth value={form.customer_id ?? ""}
+                onChange={setCustomer}
+                helperText="Select existing customer (optional)">
+                <MenuItem value="">— Walk-in / Manual —</MenuItem>
+                {customers.map((c) => (
+                  <MenuItem key={c.id} value={c.id}>
+                    {c.full_name} ({c.customer_code})
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid>
             <Grid item xs={12} sm={6}>
               <TextField label="Customer Name *" fullWidth value={form.customer_name}
-                onChange={set("customer_name")} />
+                onChange={set("customer_name")}
+                helperText="Auto-filled if customer selected" />
             </Grid>
+
             <Grid item xs={12} sm={6}>
               <TextField label="Product *" select fullWidth value={form.product_id || ""}
                 onChange={set("product_id")} disabled={!!editId}>
@@ -315,9 +337,9 @@ export default function SalesPage() {
             </Grid>
 
             {selectedProduct && (
-              <Grid item xs={12}>
+              <Grid item xs={12} sm={6}>
                 <Alert severity="info" sx={{ py: 0.5 }}>
-                  Category: {selectedProduct.category_name} | Available Stock: {selectedProduct.stock_quantity} {selectedProduct.unit_of_measure}
+                  Category: {selectedProduct.category_name} | Stock: {selectedProduct.stock_quantity} {selectedProduct.unit_of_measure}
                 </Alert>
               </Grid>
             )}

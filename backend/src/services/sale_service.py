@@ -1,4 +1,3 @@
-
 from datetime import datetime
 
 from fastapi import HTTPException
@@ -8,6 +7,8 @@ from src.models.category_model import Category
 from src.models.product_model import Product
 from src.models.sale_model import Sale
 from src.models.sale_item_model import SaleItem
+from src.models.customer_model import Customer
+from src.models.customer_purchase_summary_model import CustomerPurchaseSummary
 from src.services import audit_service
 
 
@@ -42,6 +43,7 @@ def _out(db: Session, sale: Sale):
         "customer_name": sale.customer_name, "sale_date": sale.sale_date,
         "sales_channel": sale.sales_channel, "payment_method": sale.payment_method,
         "total_amount": sale.total_amount, "created_by": sale.created_by,
+        "customer_id": sale.customer_id,
         "product_id": item.product_id if item else 0,
         "product_name": product.name if product else "",
         "category_id": item.category_id if item else 0,
@@ -53,6 +55,41 @@ def _out(db: Session, sale: Sale):
         "remaining_stock": remaining,
         "stock_alert": alert,
     }
+
+
+def _update_customer_summary(db: Session, customer_id: int):
+    """Sale aithe aa customer purchase summary recompute (Task 6)."""
+    if not customer_id:
+        return
+
+    sales = db.query(Sale).filter(Sale.customer_id == customer_id).all()
+    summary = db.query(CustomerPurchaseSummary).filter(
+        CustomerPurchaseSummary.customer_id == customer_id).first()
+    if not summary:
+        summary = CustomerPurchaseSummary(customer_id=customer_id)
+        db.add(summary)
+
+    total_orders = len(sales)
+    total_revenue = sum(s.total_amount for s in sales)
+
+    sale_ids = [s.id for s in sales]
+    items = []
+    if sale_ids:
+        items = db.query(SaleItem).filter(SaleItem.sale_id.in_(sale_ids)).all()
+    total_products = sum(it.quantity for it in items)
+
+    summary.total_orders = total_orders
+    summary.total_revenue = total_revenue
+    summary.total_products_purchased = total_products
+    summary.average_order_value = (total_revenue / total_orders) if total_orders else 0
+    summary.purchase_frequency = total_orders
+
+    if sales:
+        dates = [s.sale_date for s in sales]
+        summary.first_purchase_date = min(dates)
+        summary.last_purchase_date = max(dates)
+
+    db.commit()
 
 
 def create_sale(db: Session, user, payload):
@@ -78,6 +115,7 @@ def create_sale(db: Session, user, payload):
         customer_name=payload.customer_name, sale_date=datetime.utcnow(),
         sales_channel=payload.sales_channel, payment_method=payload.payment_method,
         total_amount=total, created_by=user.email,
+        customer_id=payload.customer_id,
     )
     db.add(sale)
     db.commit()
@@ -100,6 +138,10 @@ def create_sale(db: Session, user, payload):
                                 "Product Marked Out of Stock", product.name)
 
     db.commit()
+
+    if payload.customer_id:
+        _update_customer_summary(db, payload.customer_id)
+
     audit_service.write_log(db, user.company_id, user.email,
                             "Sale Created", invoice)
     return _out(db, sale)
@@ -177,6 +219,10 @@ def update_sale(db: Session, user, sale_id, payload):
 
     db.commit()
     db.refresh(sale)
+
+    if sale.customer_id:
+        _update_customer_summary(db, sale.customer_id)
+
     audit_service.write_log(db, user.company_id, user.email,
                             "Sale Updated", sale.invoice_number)
     return _out(db, sale)
@@ -184,6 +230,7 @@ def update_sale(db: Session, user, sale_id, payload):
 
 def delete_sale(db: Session, user, sale_id):
     sale = _get_own(db, user, sale_id)
+    customer_id = sale.customer_id
     item = db.query(SaleItem).filter(SaleItem.sale_id == sale.id).first()
 
     if item:
@@ -195,8 +242,11 @@ def delete_sale(db: Session, user, sale_id):
     invoice = sale.invoice_number
     db.delete(sale)
     db.commit()
-    audit_service.write_log(db, user.company_id, user.email,
-                            "Sale Deleted", invoice)
+
+    if customer_id:
+        _update_customer_summary(db, customer_id)
+
+    audit_service.write_log(db, user.company_id, user.email, "Sale Deleted", invoice)
     return {"message": "Sale deleted"}
 
 

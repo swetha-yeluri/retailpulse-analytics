@@ -15,7 +15,7 @@ def get_analytics(db: Session, user, from_date=None, to_date=None,
                   category_id=None, channel="", payment=""):
     company_id = user.company_id
 
-    # ---- filter sales ----
+    
     sales_q = db.query(Sale).filter(Sale.company_id == company_id)
     if channel:
         sales_q = sales_q.filter(Sale.sales_channel == channel)
@@ -23,7 +23,7 @@ def get_analytics(db: Session, user, from_date=None, to_date=None,
         sales_q = sales_q.filter(Sale.payment_method == payment)
     sales = sales_q.all()
 
-    # date filter (in-memory)
+    
     if from_date:
         fd = datetime.fromisoformat(from_date)
         sales = [s for s in sales if s.sale_date >= fd]
@@ -33,7 +33,7 @@ def get_analytics(db: Session, user, from_date=None, to_date=None,
 
     sale_ids = [s.id for s in sales]
 
-    # ---- sale items (for product/category breakdowns) ----
+    
     items = []
     if sale_ids:
         items = db.query(SaleItem).filter(SaleItem.sale_id.in_(sale_ids)).all()
@@ -42,7 +42,7 @@ def get_analytics(db: Session, user, from_date=None, to_date=None,
         keep = {it.sale_id for it in items}
         sales = [s for s in sales if s.id in keep]
 
-    # ---- KPIs ----
+    
     total_revenue = sum(s.total_amount for s in sales)
     total_orders = len(sales)
     total_products_sold = sum(it.quantity for it in items)
@@ -71,14 +71,14 @@ def get_analytics(db: Session, user, from_date=None, to_date=None,
         "total_categories": total_categories,
     }
 
-    # ---- Revenue trend (by date) ----
+    
     trend = defaultdict(float)
     for s in sales:
         key = s.sale_date.strftime("%Y-%m-%d")
         trend[key] += s.total_amount
     revenue_trend = [{"label": k, "value": round(v, 2)} for k, v in sorted(trend.items())]
 
-    # ---- Top products (by revenue) ----
+
     prod_rev = defaultdict(float)
     prod_name = {}
     for it in items:
@@ -89,7 +89,7 @@ def get_analytics(db: Session, user, from_date=None, to_date=None,
         [{"label": prod_name[pid], "value": round(rev, 2)} for pid, rev in prod_rev.items()],
         key=lambda x: x["value"], reverse=True)[:10]
 
-    # ---- Top categories (by revenue) ----
+    
     cat_rev = defaultdict(float)
     cat_name = {}
     for it in items:
@@ -100,19 +100,19 @@ def get_analytics(db: Session, user, from_date=None, to_date=None,
         [{"label": cat_name[cid], "value": round(rev, 2)} for cid, rev in cat_rev.items()],
         key=lambda x: x["value"], reverse=True)
 
-    # ---- Sales by payment ----
+
     pay = defaultdict(float)
     for s in sales:
         pay[s.payment_method] += s.total_amount
     sales_by_payment = [{"label": k, "value": round(v, 2)} for k, v in pay.items()]
 
-    # ---- Sales by channel ----
+    
     chan = defaultdict(float)
     for s in sales:
         chan[s.sales_channel] += s.total_amount
     sales_by_channel = [{"label": k, "value": round(v, 2)} for k, v in chan.items()]
 
-    # ---- Inventory by category (stock qty) ----
+    
     inv_cat = defaultdict(float)
     inv_cat_value = defaultdict(float)
     for inv in invs:
@@ -126,7 +126,7 @@ def get_analytics(db: Session, user, from_date=None, to_date=None,
     inventory_by_category = [{"label": k, "value": v} for k, v in inv_cat.items()]
     inventory_value_by_category = [{"label": k, "value": round(v, 2)} for k, v in inv_cat_value.items()]
 
-    # ---- Stock status ----
+    
     status_count = defaultdict(int)
     for i in invs:
         status_count[i.stock_status or "In Stock"] += 1

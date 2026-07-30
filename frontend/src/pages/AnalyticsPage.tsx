@@ -76,7 +76,7 @@ export default function AnalyticsPage() {
     URL.revokeObjectURL(url);
   };
 
-  // ---- PDF export ----
+  
   const exportPDF = async () => {
     const d = await analyticsApi.export();
     const { jsPDF } = await import("jspdf");

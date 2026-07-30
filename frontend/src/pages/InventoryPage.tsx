@@ -249,6 +249,7 @@ export default function InventoryPage() {
       </Dialog>
 
       {/* REORDER dialog */}
+
       <Dialog open={reorderOpen} onClose={() => setReorderOpen(false)} maxWidth="xs" fullWidth>
         <DialogTitle>Update Reorder Level</DialogTitle>
         <DialogContent>

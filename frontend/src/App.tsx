@@ -14,6 +14,8 @@ import ProductsPage from "./pages/ProductsPage";
 import SalesPage from "./pages/SalesPage";
 import InventoryPage from "./pages/InventoryPage";
 import AnalyticsPage from "./pages/AnalyticsPage";
+import CustomersPage from "./pages/CustomersPage";  
+import CustomerAnalyticsPage from "./pages/CustomerAnalyticsPage";        
 
 const queryClient = new QueryClient();
 
@@ -29,10 +31,12 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 function AppRoutes() {
   return (
     <Routes>
+      {/* Public */}
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
+      {/* Signed-in (any role) */}
       <Route
         path="/dashboard"
         element={
@@ -42,7 +46,7 @@ function AppRoutes() {
         }
       />
 
-      
+      {/* Admin only */}
       <Route
         path="/categories"
         element={
@@ -60,8 +64,9 @@ function AppRoutes() {
           </RoleRoute>
         }
       />
-     
-     <Route
+
+      {/* Admin + Analyst */}
+      <Route
         path="/sales"
         element={
           <RoleRoute allowedRoles={["Super Admin", "Company Admin", "Analyst"]}>
@@ -88,6 +93,23 @@ function AppRoutes() {
         }
       />
 
+      
+      <Route
+        path="/customers"
+        element={
+          <RoleRoute allowedRoles={["Super Admin", "Company Admin", "Analyst"]}>
+            <CustomersPage />
+          </RoleRoute>
+        }
+      />
+
+      <Route path="/customer-analytics" element={
+  <RoleRoute allowedRoles={["Super Admin", "Company Admin", "Analyst"]}>
+    <CustomerAnalyticsPage />
+  </RoleRoute>
+} />
+
+      {/* Admin only */}
       <Route
         path="/audit-logs"
         element={
@@ -97,6 +119,7 @@ function AppRoutes() {
         }
       />
 
+      {/* Fallbacks */}
       <Route path="/" element={<Navigate to="/dashboard" replace />} />
       <Route path="*" element={<Navigate to="/dashboard" replace />} />
     </Routes>

@@ -112,7 +112,7 @@ def adjust_stock(db: Session, user, payload):
                 f"Stock Out quantity cannot exceed available stock ({inv.available_stock})")
         new_stock = prev - payload.quantity
         mtype = "Stock Removal"
-    else:  # Manual Adjustment
+    else:  
         new_stock = payload.quantity
         mtype = "Manual Adjustment"
 
@@ -182,7 +182,7 @@ def movement_history(db: Session, user, product_id):
     return movements
 
 
-# ---------- Dashboard summary ----------
+
 def inventory_summary(db: Session, user):
     products = db.query(Product).filter(Product.company_id == user.company_id).all()
     for p in products:
