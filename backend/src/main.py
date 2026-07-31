@@ -1,4 +1,3 @@
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -17,7 +16,8 @@ from src.routes import (
 from src.models import (
     company_model, user_model, refresh_token_model, audit_model,
     category_model, product_model, sale_model, sale_item_model,
-    inventory_model, inventory_movement_model,customer_model, customer_purchase_summary_model,
+    inventory_model, inventory_movement_model, customer_model, customer_purchase_summary_model,
+    demand_forecast_model, forecast_history_model,
 )
 from src.routes import (
     auth_routes, profile_routes, audit_routes,
@@ -26,7 +26,8 @@ from src.routes import (
 from src.routes import (
     auth_routes, profile_routes, audit_routes,
     category_routes, product_routes, sale_routes,
-    inventory_routes, analytics_routes,customer_routes,customer_analytics_routes,
+    inventory_routes, analytics_routes, customer_routes, customer_analytics_routes,
+    forecast_routes,
 )
 
 
@@ -54,6 +55,7 @@ app.include_router(inventory_routes.router)
 app.include_router(analytics_routes.router)
 app.include_router(customer_routes.router)
 app.include_router(customer_analytics_routes.router)
+app.include_router(forecast_routes.router)
 
 @app.get("/")
 def root():

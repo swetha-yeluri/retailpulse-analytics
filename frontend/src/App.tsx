@@ -14,8 +14,9 @@ import ProductsPage from "./pages/ProductsPage";
 import SalesPage from "./pages/SalesPage";
 import InventoryPage from "./pages/InventoryPage";
 import AnalyticsPage from "./pages/AnalyticsPage";
-import CustomersPage from "./pages/CustomersPage";  
-import CustomerAnalyticsPage from "./pages/CustomerAnalyticsPage";        
+import CustomersPage from "./pages/CustomersPage";
+import CustomerAnalyticsPage from "./pages/CustomerAnalyticsPage";
+import ForecastPage from "./pages/ForecastPage";
 
 const queryClient = new QueryClient();
 
@@ -103,11 +104,25 @@ function AppRoutes() {
         }
       />
 
-      <Route path="/customer-analytics" element={
-  <RoleRoute allowedRoles={["Super Admin", "Company Admin", "Analyst"]}>
-    <CustomerAnalyticsPage />
-  </RoleRoute>
-} />
+    
+      <Route
+        path="/customer-analytics"
+        element={
+          <RoleRoute allowedRoles={["Super Admin", "Company Admin", "Analyst"]}>
+            <CustomerAnalyticsPage />
+          </RoleRoute>
+        }
+      />
+
+      
+      <Route
+        path="/forecast"
+        element={
+          <RoleRoute allowedRoles={["Super Admin", "Company Admin", "Analyst"]}>
+            <ForecastPage />
+          </RoleRoute>
+        }
+      />
 
       {/* Admin only */}
       <Route

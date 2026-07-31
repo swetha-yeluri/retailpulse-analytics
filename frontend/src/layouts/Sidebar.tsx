@@ -3,7 +3,7 @@ import {
 } from "@mui/material";
 import {
   Dashboard, Analytics, Category, Inventory2, PointOfSale, Warehouse, History,
-  People, InsertChart,
+  People, InsertChart, TrendingUp,
 } from "@mui/icons-material";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -16,6 +16,7 @@ const NAV = [
   { label: "Inventory", icon: <Warehouse />, path: "/inventory" },
   { label: "Customers", icon: <People />, path: "/customers" },
   { label: "Customer Analytics", icon: <InsertChart />, path: "/customer-analytics" },
+  { label: "Demand Forecast", icon: <TrendingUp />, path: "/forecast" },
   { label: "Audit Logs", icon: <History />, path: "/audit-logs" },
 ];
 
