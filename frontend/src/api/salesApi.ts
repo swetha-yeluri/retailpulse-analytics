@@ -4,13 +4,17 @@ export interface Sale {
   id: number;
   invoice_number: string;
   customer_name: string;
+  customer_id: number | null;          
   sale_date: string;
   sales_channel: string;
   payment_method: string;
+  payment_status: string;              
+  notes: string | null;                
   total_amount: number;
   created_by: string | null;
   product_id: number;
   product_name: string;
+  product_sku: string;                 
   category_id: number;
   category_name: string;
   quantity: number;
@@ -23,6 +27,7 @@ export interface Sale {
 
 export interface SaleData {
   customer_name: string;
+  customer_id?: number;               
   product_id: number;
   quantity: number;
   unit_price: number;
@@ -30,6 +35,8 @@ export interface SaleData {
   tax: number;
   sales_channel: string;
   payment_method: string;
+  payment_status: string;             
+  notes?: string;                    
 }
 
 export interface SaleFilters {
@@ -37,6 +44,7 @@ export interface SaleFilters {
   category_id?: number;
   channel?: string;
   payment?: string;
+  payment_status?: string;            
   sort_by?: string;
 }
 

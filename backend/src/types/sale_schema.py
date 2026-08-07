@@ -5,40 +5,47 @@ from pydantic import BaseModel, Field
 
 class SaleCreate(BaseModel):
     customer_name: str = Field(..., min_length=1)
-    customer_id: Optional[int] = None                
+    customer_id: Optional[int] = None
     product_id: int
-    quantity: int = Field(..., gt=0)             
-    unit_price: float = Field(..., ge=0)             
+    quantity: int = Field(..., gt=0)              
+    unit_price: float = Field(..., ge=0)          
     discount: float = Field(0, ge=0)
-    tax: float = Field(0, ge=0)                      
+    tax: float = Field(0, ge=0)
     sales_channel: str = "Retail Store"
     payment_method: str = "Cash"
+    payment_status: str = "Paid"                   
+    notes: Optional[str] = None                     
 
 
 class SaleUpdate(BaseModel):
     customer_name: Optional[str] = None
-    customer_id: Optional[int] = None                
+    customer_id: Optional[int] = None
     quantity: Optional[int] = Field(None, gt=0)
     unit_price: Optional[float] = Field(None, ge=0)
     discount: Optional[float] = Field(None, ge=0)
     tax: Optional[float] = Field(None, ge=0)
     sales_channel: Optional[str] = None
     payment_method: Optional[str] = None
+    payment_status: Optional[str] = None             
+    notes: Optional[str] = None                     
 
 
 class SaleOut(BaseModel):
     id: int
     invoice_number: str
     customer_name: str
-    customer_id: Optional[int] = None                # Task 6
+    customer_id: Optional[int] = None              
     sale_date: datetime
     sales_channel: str
     payment_method: str
+    payment_status: str = "Paid"                 
+    notes: Optional[str] = None                      
     total_amount: float
     created_by: Optional[str] = None
 
     product_id: int
     product_name: str = ""
+    product_sku: str = ""                           
     category_id: int
     category_name: str = ""
     quantity: int

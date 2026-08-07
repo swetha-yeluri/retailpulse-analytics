@@ -42,10 +42,13 @@ def _out(db: Session, sale: Sale):
         "id": sale.id, "invoice_number": sale.invoice_number,
         "customer_name": sale.customer_name, "sale_date": sale.sale_date,
         "sales_channel": sale.sales_channel, "payment_method": sale.payment_method,
+        "payment_status": sale.payment_status,        
+        "notes": sale.notes,                            
         "total_amount": sale.total_amount, "created_by": sale.created_by,
         "customer_id": sale.customer_id,
         "product_id": item.product_id if item else 0,
         "product_name": product.name if product else "",
+        "product_sku": product.sku if product else "",  
         "category_id": item.category_id if item else 0,
         "category_name": category.name if category else "",
         "quantity": item.quantity if item else 0,
@@ -58,7 +61,7 @@ def _out(db: Session, sale: Sale):
 
 
 def _update_customer_summary(db: Session, customer_id: int):
-    """Sale aithe aa customer purchase summary recompute (Task 6)."""
+    
     if not customer_id:
         return
 
@@ -93,27 +96,41 @@ def _update_customer_summary(db: Session, customer_id: int):
 
 
 def create_sale(db: Session, user, payload):
+    
+    if payload.customer_id:
+        customer = db.query(Customer).filter(
+            Customer.id == payload.customer_id,
+            Customer.company_id == user.company_id).first()
+        if not customer:
+            raise HTTPException(400, "Customer not found")
+
+
     product = db.query(Product).filter(
         Product.id == payload.product_id,
         Product.company_id == user.company_id).first()
     if not product:
         raise HTTPException(400, "Product not found")
 
+    
     if payload.quantity > product.stock_quantity:
         raise HTTPException(400,
             f"Insufficient stock. Available: {product.stock_quantity}")
 
-    product_value = payload.unit_price * payload.quantity
+    
+    product_value = payload.unit_price * payload.quantity   
     if payload.discount > product_value:
         raise HTTPException(400, "Discount cannot exceed total product value")
 
     total = product_value - payload.discount + payload.tax
-    invoice = _generate_invoice(db, user.company_id)
+    invoice = _generate_invoice(db, user.company_id)        
 
     sale = Sale(
         company_id=user.company_id, invoice_number=invoice,
         customer_name=payload.customer_name, sale_date=datetime.utcnow(),
         sales_channel=payload.sales_channel, payment_method=payload.payment_method,
+        payment_status=payload.payment_status,             
+        discount=payload.discount, tax=payload.tax,       
+        notes=payload.notes,                               
         total_amount=total, created_by=user.email,
         customer_id=payload.customer_id,
     )
@@ -128,6 +145,7 @@ def create_sale(db: Session, user, payload):
     )
     db.add(item)
 
+    
     product.stock_quantity -= payload.quantity
     audit_service.write_log(db, user.company_id, user.email,
                             "Inventory Updated", product.name)
@@ -148,7 +166,7 @@ def create_sale(db: Session, user, payload):
 
 
 def list_sales(db: Session, user, search="", category_id=None, channel="",
-               payment="", sort_by="date"):
+               payment="", payment_status="", sort_by="date"):
     q = db.query(Sale).filter(Sale.company_id == user.company_id)
 
     if search:
@@ -159,11 +177,15 @@ def list_sales(db: Session, user, search="", category_id=None, channel="",
         q = q.filter(Sale.sales_channel == channel)
     if payment:
         q = q.filter(Sale.payment_method == payment)
+    if payment_status:                                    
+        q = q.filter(Sale.payment_status == payment_status)
 
     if sort_by == "invoice":
         q = q.order_by(Sale.invoice_number.asc())
     elif sort_by == "amount":
         q = q.order_by(Sale.total_amount.desc())
+    elif sort_by == "customer":                           
+        q = q.order_by(Sale.customer_name.asc())
     else:
         q = q.order_by(Sale.sale_date.desc())
 
@@ -192,7 +214,8 @@ def update_sale(db: Session, user, sale_id, payload):
     item = db.query(SaleItem).filter(SaleItem.sale_id == sale.id).first()
     data = payload.dict(exclude_unset=True)
 
-    for f in ["customer_name", "sales_channel", "payment_method"]:
+    for f in ["customer_name", "sales_channel", "payment_method",
+              "payment_status", "notes"]:                   
         if f in data:
             setattr(sale, f, data[f])
 
@@ -216,6 +239,8 @@ def update_sale(db: Session, user, sale_id, payload):
             raise HTTPException(400, "Discount cannot exceed total product value")
         item.total = pv - item.discount + item.tax
         sale.total_amount = item.total
+        sale.discount = item.discount                       
+        sale.tax = item.tax
 
     db.commit()
     db.refresh(sale)

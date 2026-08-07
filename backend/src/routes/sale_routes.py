@@ -1,4 +1,3 @@
-
 from typing import Optional
 
 from fastapi import APIRouter, Depends
@@ -14,9 +13,11 @@ router = APIRouter(prefix="/api", tags=["Sales"])
 
 @router.get("/sales", response_model=list[SaleOut])
 def list_sales(search: str = "", category_id: Optional[int] = None,
-               channel: str = "", payment: str = "", sort_by: str = "date",
+               channel: str = "", payment: str = "", payment_status: str = "",
+               sort_by: str = "date",
                db: Session = Depends(get_db), user=Depends(require_active_user)):
-    return sale_service.list_sales(db, user, search, category_id, channel, payment, sort_by)
+    return sale_service.list_sales(db, user, search, category_id, channel,
+                                   payment, payment_status, sort_by)
 
 
 @router.post("/sales", response_model=SaleOut)
