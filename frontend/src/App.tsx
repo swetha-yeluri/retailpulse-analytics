@@ -17,6 +17,7 @@ import AnalyticsPage from "./pages/AnalyticsPage";
 import CustomersPage from "./pages/CustomersPage";
 import CustomerAnalyticsPage from "./pages/CustomerAnalyticsPage";
 import ForecastPage from "./pages/ForecastPage";
+import SalesAnalyticsPage from "./pages/SalesAnalyticsPage";
 
 const queryClient = new QueryClient();
 
@@ -85,6 +86,16 @@ function AppRoutes() {
         }
       />
 
+      
+<Route
+  path="/analytics/sales"
+  element={
+    <RoleRoute allowedRoles={["Super Admin", "Company Admin", "Analyst"]}>
+      <SalesAnalyticsPage />
+    </RoleRoute>
+  }
+/>
+
       <Route
         path="/analytics"
         element={
@@ -93,6 +104,8 @@ function AppRoutes() {
           </RoleRoute>
         }
       />
+
+
 
       
       <Route

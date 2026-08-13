@@ -3,7 +3,7 @@ import {
 } from "@mui/material";
 import {
   Dashboard, Analytics, Category, Inventory2, PointOfSale, Warehouse, History,
-  People, InsertChart, TrendingUp,
+  People, InsertChart, TrendingUp, BarChart,
 } from "@mui/icons-material";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -17,6 +17,7 @@ const NAV = [
   { label: "Customers", icon: <People />, path: "/customers" },
   { label: "Customer Analytics", icon: <InsertChart />, path: "/customer-analytics" },
   { label: "Demand Forecast", icon: <TrendingUp />, path: "/forecast" },
+  { label: "Sales Analytics", icon: <BarChart />, path: "/analytics/sales" },
   { label: "Audit Logs", icon: <History />, path: "/audit-logs" },
 ];
 
@@ -53,7 +54,7 @@ export default function Sidebar() {
 
       <Divider sx={{ borderColor: "#1e293b", mb: 1.5 }} />
 
-      <List sx={{ flexGrow: 1 }}>
+      <List sx={{ flexGrow: 1, overflowY: "auto" }}>
         {NAV.map((item) => {
           const active = location.pathname === item.path;
           return (
