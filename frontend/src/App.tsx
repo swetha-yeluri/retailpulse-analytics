@@ -18,6 +18,7 @@ import CustomersPage from "./pages/CustomersPage";
 import CustomerAnalyticsPage from "./pages/CustomerAnalyticsPage";
 import ForecastPage from "./pages/ForecastPage";
 import SalesAnalyticsPage from "./pages/SalesAnalyticsPage";
+import InventoryForecastPage from "./pages/InventoryForecastPage";
 
 const queryClient = new QueryClient();
 
@@ -33,12 +34,12 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 function AppRoutes() {
   return (
     <Routes>
-      {/* Public */}
+      
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
-      {/* Signed-in (any role) */}
+      
       <Route
         path="/dashboard"
         element={
@@ -48,7 +49,7 @@ function AppRoutes() {
         }
       />
 
-      {/* Admin only */}
+      
       <Route
         path="/categories"
         element={
@@ -67,12 +68,22 @@ function AppRoutes() {
         }
       />
 
-      {/* Admin + Analyst */}
+      
       <Route
         path="/sales"
         element={
           <RoleRoute allowedRoles={["Super Admin", "Company Admin", "Analyst"]}>
             <SalesPage />
+          </RoleRoute>
+        }
+      />
+
+      
+      <Route
+        path="/inventory/forecast"
+        element={
+          <RoleRoute allowedRoles={["Super Admin", "Company Admin", "Analyst"]}>
+            <InventoryForecastPage />
           </RoleRoute>
         }
       />
@@ -86,15 +97,14 @@ function AppRoutes() {
         }
       />
 
-      
-<Route
-  path="/analytics/sales"
-  element={
-    <RoleRoute allowedRoles={["Super Admin", "Company Admin", "Analyst"]}>
-      <SalesAnalyticsPage />
-    </RoleRoute>
-  }
-/>
+      <Route
+        path="/analytics/sales"
+        element={
+          <RoleRoute allowedRoles={["Super Admin", "Company Admin", "Analyst"]}>
+            <SalesAnalyticsPage />
+          </RoleRoute>
+        }
+      />
 
       <Route
         path="/analytics"
@@ -104,8 +114,6 @@ function AppRoutes() {
           </RoleRoute>
         }
       />
-
-
 
       
       <Route
@@ -117,7 +125,7 @@ function AppRoutes() {
         }
       />
 
-    
+      
       <Route
         path="/customer-analytics"
         element={
@@ -137,7 +145,7 @@ function AppRoutes() {
         }
       />
 
-      {/* Admin only */}
+      
       <Route
         path="/audit-logs"
         element={
@@ -147,7 +155,7 @@ function AppRoutes() {
         }
       />
 
-      {/* Fallbacks */}
+      
       <Route path="/" element={<Navigate to="/dashboard" replace />} />
       <Route path="*" element={<Navigate to="/dashboard" replace />} />
     </Routes>

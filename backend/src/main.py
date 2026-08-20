@@ -27,7 +27,7 @@ from src.routes import (
     auth_routes, profile_routes, audit_routes,
     category_routes, product_routes, sale_routes,
     inventory_routes, analytics_routes, customer_routes, customer_analytics_routes,
-    forecast_routes, sales_analytics_routes,
+    forecast_routes, sales_analytics_routes,inventory_forecast_routes,
 )
 
 
@@ -57,6 +57,7 @@ app.include_router(customer_routes.router)
 app.include_router(customer_analytics_routes.router)
 app.include_router(forecast_routes.router)
 app.include_router(sales_analytics_routes.router)
+app.include_router(inventory_forecast_routes.router)
 
 @app.get("/")
 def root():
