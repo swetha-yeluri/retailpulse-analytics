@@ -4,7 +4,7 @@ from urllib.parse import quote_plus
 DB_USER = "postgres"
 DB_PASSWORD = "Sujatha@21"       
 DB_HOST = "localhost"
-DB_PORT = 8008
+DB_PORT = 5432
 DB_NAME = "retailpulse"
 
 

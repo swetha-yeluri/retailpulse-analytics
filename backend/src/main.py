@@ -11,13 +11,13 @@ from src.routes import auth_routes, profile_routes
 from src.routes import auth_routes, profile_routes, audit_routes
 from src.routes import (
     auth_routes, profile_routes, audit_routes,
-    category_routes, product_routes,
+    category_routes, product_routes, inventory_forecast_routes, import_routes,
 )
 from src.models import (
     company_model, user_model, refresh_token_model, audit_model,
     category_model, product_model, sale_model, sale_item_model,
     inventory_model, inventory_movement_model, customer_model, customer_purchase_summary_model,
-    demand_forecast_model, forecast_history_model,
+    demand_forecast_model, forecast_history_model, import_history_model,
 )
 from src.routes import (
     auth_routes, profile_routes, audit_routes,
@@ -58,6 +58,7 @@ app.include_router(customer_analytics_routes.router)
 app.include_router(forecast_routes.router)
 app.include_router(sales_analytics_routes.router)
 app.include_router(inventory_forecast_routes.router)
+app.include_router(import_routes.router)
 
 @app.get("/")
 def root():

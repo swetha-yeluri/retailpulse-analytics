@@ -19,6 +19,7 @@ import CustomerAnalyticsPage from "./pages/CustomerAnalyticsPage";
 import ForecastPage from "./pages/ForecastPage";
 import SalesAnalyticsPage from "./pages/SalesAnalyticsPage";
 import InventoryForecastPage from "./pages/InventoryForecastPage";
+import DataImportPage from "./pages/DataImportPage";
 
 const queryClient = new QueryClient();
 
@@ -34,12 +35,12 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 function AppRoutes() {
   return (
     <Routes>
-      
+      {/* Public */}
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
-      
+      {/* Signed-in (any role) */}
       <Route
         path="/dashboard"
         element={
@@ -115,7 +116,7 @@ function AppRoutes() {
         }
       />
 
-      
+    
       <Route
         path="/customers"
         element={
@@ -141,6 +142,16 @@ function AppRoutes() {
         element={
           <RoleRoute allowedRoles={["Super Admin", "Company Admin", "Analyst"]}>
             <ForecastPage />
+          </RoleRoute>
+        }
+      />
+
+      
+      <Route
+        path="/data-import"
+        element={
+          <RoleRoute allowedRoles={ADMIN_ROLES}>
+            <DataImportPage />
           </RoleRoute>
         }
       />
