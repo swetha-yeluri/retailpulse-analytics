@@ -20,6 +20,7 @@ import ForecastPage from "./pages/ForecastPage";
 import SalesAnalyticsPage from "./pages/SalesAnalyticsPage";
 import InventoryForecastPage from "./pages/InventoryForecastPage";
 import DataImportPage from "./pages/DataImportPage";
+import ReportsPage from "./pages/ReportsPage";
 
 const queryClient = new QueryClient();
 
@@ -156,6 +157,17 @@ function AppRoutes() {
         }
       />
 
+
+      
+       
+      <Route
+        path="/reports"
+        element={
+          <RoleRoute allowedRoles={["Super Admin", "Company Admin", "Analyst"]}>
+            <ReportsPage />
+          </RoleRoute>
+     }
+     />
       
       <Route
         path="/audit-logs"
