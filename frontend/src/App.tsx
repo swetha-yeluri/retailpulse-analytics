@@ -21,6 +21,7 @@ import SalesAnalyticsPage from "./pages/SalesAnalyticsPage";
 import InventoryForecastPage from "./pages/InventoryForecastPage";
 import DataImportPage from "./pages/DataImportPage";
 import ReportsPage from "./pages/ReportsPage";
+import DataQualityPage from "./pages/DataQualityPage";
 
 const queryClient = new QueryClient();
 
@@ -168,6 +169,17 @@ function AppRoutes() {
           </RoleRoute>
      }
      />
+
+
+     
+     <Route
+       path="/data-quality"
+       element={
+         <RoleRoute allowedRoles={["Super Admin", "Company Admin"]}>
+            <DataQualityPage />
+        </RoleRoute>
+    }  
+  />
       
       <Route
         path="/audit-logs"
