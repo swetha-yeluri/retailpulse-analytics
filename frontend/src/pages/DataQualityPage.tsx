@@ -187,10 +187,10 @@ export default function DataQualityPage() {
           </Tabs>
         </Paper>
 
-        {/* ============ TAB 0: ISSUES ============ */}
+        
         {tab === 0 && (
           <>
-            {/* Filters */}
+            
             <Paper elevation={0} sx={{ p: { xs: 2, md: 3 }, mb: 4, borderRadius: 4, border: "1px solid #eef0f4", display: "flex", gap: 2, flexWrap: "wrap", alignItems: "center" }}>
               <TextField placeholder="Search issues..." size="small" value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}

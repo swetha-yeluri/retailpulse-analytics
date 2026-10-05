@@ -35,14 +35,12 @@ export default function DashboardPage() {
 
   if (!user) return null;
 
-  const salesCards = [
+  // ALL 8 CARDS - okate array (Sales 4 + Inventory 4)
+  const allCards = [
     { label: "Total Sales", value: sales?.total_sales, icon: <ShoppingCart />, color: "#6366f1", money: false },
     { label: "Total Revenue", value: sales?.total_revenue, icon: <Payments />, color: "#10b981", money: true },
     { label: "Total Orders", value: sales?.total_orders, icon: <Receipt />, color: "#3b82f6", money: false },
     { label: "Avg Order Value", value: sales?.average_order_value, icon: <TrendingUp />, color: "#f59e0b", money: true },
-  ];
-
-  const invCards = [
     { label: "Total Products", value: inv?.total_products, icon: <Inventory2 />, color: "#6366f1", money: false },
     { label: "Total Inventory Qty", value: inv?.total_inventory_quantity, icon: <Warehouse />, color: "#8b5cf6", money: false },
     { label: "Low Stock", value: inv?.low_stock_products, icon: <Warning />, color: "#f59e0b", money: false },
@@ -69,23 +67,26 @@ export default function DashboardPage() {
     { label: "Last Login", value: user.last_login ? new Date(user.last_login).toLocaleString() : "—" },
   ];
 
+  // StatCard - compact (8 cards oke line ki chinna)
   const StatCard = ({ label, value, icon, color, money }: any) => (
-    <Grid item xs={12} sm={6} md={3}>
+    <Box sx={{ flex: 1, minWidth: 0 }}>
       <Paper sx={{
-        p: 3, borderRadius: 3, height: "100%", border: "1px solid #eef2f7",
+        p: 2, borderRadius: 3, height: "100%", border: "1px solid #eef2f7",
         transition: "all 0.2s",
         "&:hover": { boxShadow: "0 8px 24px rgba(0,0,0,0.08)", transform: "translateY(-2px)" },
       }}>
         <Box sx={{
-          width: 48, height: 48, borderRadius: 2.5, bgcolor: `${color}15`, color,
-          display: "flex", alignItems: "center", justifyContent: "center", mb: 2,
+          width: 40, height: 40, borderRadius: 2, bgcolor: `${color}15`, color,
+          display: "flex", alignItems: "center", justifyContent: "center", mb: 1.5,
         }}>{icon}</Box>
-        <Typography variant="body2" color="text.secondary" mb={0.5}>{label}</Typography>
-        <Typography variant="h4" fontWeight="bold" color="#0f172a">
+        <Typography variant="caption" color="text.secondary" mb={0.5} noWrap sx={{ display: "block" }}>
+          {label}
+        </Typography>
+        <Typography variant="h6" fontWeight="bold" color="#0f172a" noWrap>
           {value === undefined ? "—" : money ? `₹${Number(value).toLocaleString()}` : value}
         </Typography>
       </Paper>
-    </Grid>
+    </Box>
   );
 
   const SectionTitle = ({ children }: any) => (
@@ -106,19 +107,13 @@ export default function DashboardPage() {
         </Typography>
       </Box>
 
-      {/* Sales cards */}
-      <SectionTitle>Sales Overview</SectionTitle>
-      <Grid container spacing={3} mb={5}>
-        {salesCards.map((c) => <StatCard key={c.label} {...c} />)}
-      </Grid>
+      {/* ALL 8 KPI CARDS - SINGLE LINE */}
+      <SectionTitle>Overview</SectionTitle>
+      <Box sx={{ display: "flex", gap: 1.5, mb: 4 }}>
+        {allCards.map((c) => <StatCard key={c.label} {...c} />)}
+      </Box>
 
-      {/* Inventory cards */}
-      <SectionTitle>Inventory Overview</SectionTitle>
-      <Grid container spacing={3} mb={4}>
-        {invCards.map((c) => <StatCard key={c.label} {...c} />)}
-      </Grid>
-
-      {/* Charts — full width, spacious */}
+      {/* Charts */}
       <SectionTitle>Analytics</SectionTitle>
 
       <Paper sx={{ p: 4, borderRadius: 3, border: "1px solid #eef2f7", mb: 3 }}>

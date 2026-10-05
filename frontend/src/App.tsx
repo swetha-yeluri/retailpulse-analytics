@@ -22,6 +22,7 @@ import InventoryForecastPage from "./pages/InventoryForecastPage";
 import DataImportPage from "./pages/DataImportPage";
 import ReportsPage from "./pages/ReportsPage";
 import DataQualityPage from "./pages/DataQualityPage";
+import AdvancedImportPage from "./pages/AdvancedImportPage";
 
 const queryClient = new QueryClient();
 
@@ -180,6 +181,17 @@ function AppRoutes() {
         </RoleRoute>
     }  
   />
+
+
+      
+      <Route
+        path="/advanced-import"
+        element={
+          <RoleRoute allowedRoles={["Super Admin", "Company Admin"]}>
+             <AdvancedImportPage />
+          </RoleRoute>
+    } 
+ />
       
       <Route
         path="/audit-logs"
