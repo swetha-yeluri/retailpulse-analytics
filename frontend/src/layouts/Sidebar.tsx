@@ -4,7 +4,7 @@ import {
 import {
   Dashboard, Analytics, Category, Inventory2, PointOfSale, Warehouse, History,
   People, InsertChart, TrendingUp, BarChart, Insights, Storage, Assessment,
-  VerifiedUser, CloudUpload,
+  VerifiedUser, CloudUpload, AccountTree,
 } from "@mui/icons-material";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -22,6 +22,7 @@ const NAV = [
   { label: "Sales Analytics", icon: <BarChart />, path: "/analytics/sales" },
   { label: "Data Import", icon: <Storage />, path: "/data-import" },
   { label: "Advanced Import", icon: <CloudUpload />, path: "/advanced-import" },
+  { label: "Workflows", icon: <AccountTree />, path: "/workflow" },
   { label: "Reports", icon: <Assessment />, path: "/reports" },
   { label: "Data Quality", icon: <VerifiedUser />, path: "/data-quality" },
   { label: "Audit Logs", icon: <History />, path: "/audit-logs" },

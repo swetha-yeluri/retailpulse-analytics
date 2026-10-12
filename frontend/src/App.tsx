@@ -23,6 +23,7 @@ import DataImportPage from "./pages/DataImportPage";
 import ReportsPage from "./pages/ReportsPage";
 import DataQualityPage from "./pages/DataQualityPage";
 import AdvancedImportPage from "./pages/AdvancedImportPage";
+import WorkflowPage from "./pages/WorkflowPage";
 
 const queryClient = new QueryClient();
 
@@ -192,6 +193,18 @@ function AppRoutes() {
           </RoleRoute>
     } 
  />
+
+
+
+     
+       <Route
+         path="/workflow"
+         element={
+           <RoleRoute allowedRoles={["Super Admin", "Company Admin", "Analyst"]}>
+              <WorkflowPage />
+           </RoleRoute>
+       }
+/>
       
       <Route
         path="/audit-logs"
