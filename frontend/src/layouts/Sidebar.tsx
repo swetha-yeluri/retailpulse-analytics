@@ -4,7 +4,7 @@ import {
 import {
   Dashboard, Analytics, Category, Inventory2, PointOfSale, Warehouse, History,
   People, InsertChart, TrendingUp, BarChart, Insights, Storage, Assessment,
-  VerifiedUser, CloudUpload, AccountTree,
+  VerifiedUser, CloudUpload, AccountTree, MonitorHeart,
 } from "@mui/icons-material";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -25,6 +25,7 @@ const NAV = [
   { label: "Workflows", icon: <AccountTree />, path: "/workflow" },
   { label: "Reports", icon: <Assessment />, path: "/reports" },
   { label: "Data Quality", icon: <VerifiedUser />, path: "/data-quality" },
+  { label: "System Health", icon: <MonitorHeart />, path: "/system-health" },
   { label: "Audit Logs", icon: <History />, path: "/audit-logs" },
 ];
 
