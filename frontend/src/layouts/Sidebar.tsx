@@ -7,6 +7,7 @@ import {
   VerifiedUser, CloudUpload, AccountTree, MonitorHeart, AdminPanelSettings,
 } from "@mui/icons-material";
 import { useLocation, useNavigate } from "react-router-dom";
+import { Hub } from "@mui/icons-material";
 
 const NAV = [
   { label: "Dashboard", icon: <Dashboard />, path: "/dashboard" },
@@ -28,6 +29,7 @@ const NAV = [
   { label: "System Health", icon: <MonitorHeart />, path: "/system-health" },
   { label: "Data Governance", icon: <AdminPanelSettings />, path: "/governance" },
   { label: "Audit Logs", icon: <History />, path: "/audit-logs" },
+  { label: "Data Integration", icon: <Hub />, path: "/integrations" },
 ];
 
 const SIDEBAR_WIDTH = 250;

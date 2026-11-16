@@ -26,6 +26,7 @@ import AdvancedImportPage from "./pages/AdvancedImportPage";
 import WorkflowPage from "./pages/WorkflowPage";
 import SystemHealthPage from "./pages/SystemHealthPage";
 import GovernancePage from "./pages/GovernancePage";
+import IntegrationsPage from "./pages/IntegrationsPage";
 
 const queryClient = new QueryClient();
 
@@ -227,6 +228,16 @@ function AppRoutes() {
             <RoleRoute allowedRoles={["Super Admin", "Company Admin", "Analyst"]}>
                <GovernancePage />
            </RoleRoute>
+     }
+/>
+
+
+        <Route
+          path="/integrations"
+          element={
+            <RoleRoute allow={["Super Admin", "Company Admin", "Analyst", "Viewer"]}>
+               <IntegrationsPage />
+            </RoleRoute>
      }
 />
       
